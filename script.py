@@ -4,6 +4,10 @@ import os
 
 from os import path
 
+DATADIR = "/home/data/"
+OUTDIR = "/home/output/"
+OUTNAME = "result.txt"
+
 
 class DockerScript:
     def print_help(self):
@@ -26,9 +30,22 @@ class DockerScript:
                 print ("Successfully created the directory %s " % dir_path)
 
 
-    def print_list(self, in_path, out_path):
-        self.dir_exists("/home/data/")
-
+    def print_list(self, print_var):
+        self.dir_exists(DATADIR)
+        self.dir_exists(OUTDIR)
+        files = os.listdir(DATADIR)
+        if print_var:
+            if len(files) == 0:
+                print("No files exist in the data directory")
+            for file in files:
+                print(file)
+        else:
+            fd = os.open(OUTDIR + OUTNAME, os.O_RDWR)
+            if len(files) == 0:
+                fd.write("No files exist in the data directory")
+            for file in files:
+                fd.write(file + "\n")
+            fd.close()
 
 def main():
     exit_status = False
@@ -47,7 +64,9 @@ def main():
         elif usr_response == 'help':
             ds.print_help()
         elif usr_response == 'list':
-            ds.print_list(in_path, out_path)
+            ds.print_list(True)
+        elif usr_response == 'run':
+            ds.print_list(False)
         else:
             print("Operation not found. Type 'help' for a list of available operations.")
 
