@@ -40,7 +40,7 @@ class DockerScript:
             for file in files:
                 print(file)
         else:
-            fd = os.open(OUTDIR + OUTNAME, os.O_RDWR)
+            fd = os.open(OUTDIR + OUTNAME, "w")
             if len(files) == 0:
                 fd.write("No files exist in the data directory")
             for file in files:
