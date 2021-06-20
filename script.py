@@ -20,7 +20,7 @@ class DockerScript:
         print('run: Runs all of the operations and puts the output in home/output/result.txt')
         print('list: List the names of all the files')
         print('count: Count the total number of words in all files')
-        print('file-max: List the file name with the most words')
+        print('count-max: List the file name with the most words')
         print('find-ip: List the ip of your machine')
         print('*****************************************************************************')
 
@@ -93,13 +93,21 @@ class DockerScript:
         return file_counts
 
     def get_max_file_count(self, print_var, file_counts):
-        key = max(file_counts, key=file_counts.get)
-        if print_var == PrintFormat.CONSOLE:
-            print("Max file: %s - %s words" % key, file_counts[key])
+        if file_counts:
+            key = max(file_counts, key=file_counts.get)
+            if print_var == PrintFormat.CONSOLE:
+                print("Max file: %s - %s words" % key, file_counts[key])
+            else:
+                fd = open(OUTDIR + OUTNAME, "w")
+                fd.write("Max file: %s - %s words" % key, file_counts[key])
+                fd.close
         else:
-            fd = open(OUTDIR + OUTNAME, "w")
-            fd.write("Max file: %s - %s words" % key, file_counts[key])
-            fd.close
+            if print_var == PrintFormat.CONSOLE:
+                print("No files exist in the dat directory")
+            else:
+                fd = open(OUTDIR + OUTNAME, "w")
+                fd.write("No files exist in the data directory\n")
+                fd.close
 
 
 def main():
@@ -123,7 +131,9 @@ def main():
             ds.print_list(PrintFormat.FILE)
             file_counts = ds.count_all_files(PrintFormat.FILE)
             ds.get_max_file_count(PrintFormat.FILE, file_counts)
-        elif usr_response == 'file-max':
+        elif usr_response == 'count':
+            file_counts = ds.count_all_files(PrintFormat.CONSOLE)
+        elif usr_response == 'count-max':
             if file_counts:
                 ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
             else:
