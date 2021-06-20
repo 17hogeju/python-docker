@@ -58,7 +58,7 @@ def main():
     print("To get a list of available operations, type 'help'")
     print("To exit this program, type 'exit'")
     while(exit_status == False):
-        usr_response = input('')
+        usr_response = input('>> ')
         if usr_response == 'exit':
             exit_status = True
         elif usr_response == 'help':
