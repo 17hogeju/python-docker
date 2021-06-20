@@ -15,15 +15,19 @@ class DockerScript:
         print('find-ip: List the ip of your machine')
         print('*****************************************************************************')
 
-    def data_dir_exists(self):
-        if not path.isdir("/home/data/"):
-            print("Path: /home/data/ does not exist. Creating one now.")
-            os.mkdir("/home/data/")
-            print("Data directory created")
+    def dir_exists(self, path):
+        if not path.isdir(path):
+            print("Directory %s does not exist. Creating one now." % path)
+            try:
+                os.mkdir(path)
+            except OSError:
+                print ("Creation of the directory %s failed" % path)
+            else:
+                print ("Successfully created the directory %s " % path)
 
 
     def print_list(self, in_path, out_path):
-        self.data_dir_exists()
+        self.dir_exists("/home/data/")
 
 
 def main():
