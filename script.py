@@ -3,11 +3,16 @@ import sys
 import os
 
 from os import path
+from enum import Enum
 
 DATADIR = "/home/data/"
 OUTDIR = "/home/output/"
 OUTNAME = "result.txt"
 
+class PrintFormat(Enum):
+    CONSOLE = 1
+    FILE = 2
+    NONE = 3
 
 class DockerScript:
     def print_help(self):
@@ -34,24 +39,73 @@ class DockerScript:
         self.dir_exists(DATADIR)
         self.dir_exists(OUTDIR)
         files = os.listdir(DATADIR)
-        if print_var:
-            if len(files) == 0:
+        if print_var == PrintFormat.FILE:
+            fd = open(OUTDIR + OUTNAME, "w")
+        if len(files) == 0:
+            if print_var == PrintFormat.CONSOLE:
                 print("No files exist in the data directory")
-            for file in files:
+            else:
+                fd.write("No files exist in the data directory\n")
+        else:
+            if print_var == PrintFormat.CONSOLE:
+                print("File Names:")
+            else:
+                fd.write("File Names:\n")
+        for file in files:
+            if print_var == PrintFormat.CONSOLE:
                 print(file)
+            else:
+                fd.write("%s\n" % file)
+        if print_var == PrintFormat.FILE:
+            fd.close()
+
+    def count_all_files(self, print_var):
+        self.dir_exists(DATADIR)
+        self.dir_exists(OUTDIR)
+        files = os.listdir(DATADIR)
+        file_counts = {}
+        total = 0
+
+        if print_var == PrintFormat.FILE:
+            fd = open(OUTDIR + OUTNAME, "w")
+        if len(files) == 0:
+            if print_var == PrintFormat.CONSOLE:
+                print("No files exist in the data directory")
+            elif print_var == PrintFormat.FILE:
+                fd.write("No files exist in the data directory\n")
+        for file in files:
+            try:
+                tmpfile = open(file, "rt")
+                data = tmpfile.read()
+                words = data.split()
+                file_counts[file] = len(words)
+                total += len(words)
+            except IOError:
+                if print_var == PrintFormat.CONSOLE:
+                    print("Error opening and reading file: %s" % file)
+                elif print_var == PrintFormat.FILE:
+                    fd.write("Error opening and reading file: %s\n" % file)
+        if print_var == PrintFormat.CONSOLE:
+            print("Total words in all files: %s" % total)
+        elif print_var == PrintFormat.FILE:
+            fd.write("Total words in all files: %s\n" % total)
+            fd.close
+        return file_counts
+
+    def get_max_file_count(self, print_var, file_counts):
+        key = max(file_counts, key=file_counts.get)
+        if print_var == PrintFormat.CONSOLE:
+            print("Max file: %s - %s words" % key, file_counts[key])
         else:
             fd = open(OUTDIR + OUTNAME, "w")
-            if len(files) == 0:
-                fd.write("No files exist in the data directory\n")
-            for file in files:
-                fd.write(file + "\n")
-            fd.close()
+            fd.write("Max file: %s - %s words" % key, file_counts[key])
+            fd.close
+
 
 def main():
     exit_status = False
     usr_path = os.getcwd()
-    in_path = usr_path + "/home/data/"
-    out_path = usr_path + "/home/output/"
+    file_counts = {}
     ds = DockerScript()
     print('Welcome to PyDock!')
     print('This program allows you to execute file operations within the folder: home/data')
@@ -64,9 +118,18 @@ def main():
         elif usr_response == 'help':
             ds.print_help()
         elif usr_response == 'list':
-            ds.print_list(True)
+            ds.print_list(PrintFormat.CONSOLE)
         elif usr_response == 'run':
-            ds.print_list(False)
+            ds.print_list(PrintFormat.FILE)
+            file_counts = ds.count_all_files(PrintFormat.FILE)
+            ds.get_max_file_count(PrintFormat.FILE, file_counts)
+        elif usr_response == 'file-max':
+            if file_counts:
+                ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
+            else:
+                file_counts = ds.count_all_files(PrintFormat.NONE)
+                ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
+
         else:
             print("Operation not found. Type 'help' for a list of available operations.")
 
