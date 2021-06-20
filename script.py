@@ -99,7 +99,7 @@ class DockerScript:
                 print("Max file: %s - %s words" % (key, file_counts[key]))
             else:
                 fd = open(OUTDIR + OUTNAME, "a")
-                fd.write("Max file: %s - %s words" % (key, file_counts[key]))
+                fd.write("Max file: %s - %s words\n" % (key, file_counts[key]))
                 fd.close
         else:
             if print_var == PrintFormat.CONSOLE:
