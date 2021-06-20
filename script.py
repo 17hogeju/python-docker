@@ -1,5 +1,4 @@
 import socket
-import sys
 import os
 
 from os import path
@@ -108,7 +107,16 @@ class DockerScript:
                 fd = open(OUTDIR + OUTNAME, "a")
                 fd.write("No files exist in the data directory\n")
                 fd.close
-
+    
+    def find_ip(self, print_var):
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        if print_var == PrintFormat.CONSOLE:
+            print("ip: %s" % ip)
+        else:
+            fd = open(OUTDIR + OUTNAME, "a")
+            fd.write("ip: %s\n" % ip)
+            fd.close
 
 def main():
     exit_status = False
@@ -130,6 +138,7 @@ def main():
             ds.print_list(PrintFormat.FILE)
             file_counts = ds.count_all_files(PrintFormat.FILE)
             ds.get_max_file_count(PrintFormat.FILE, file_counts)
+            ds.find_ip(PrintFormat.FILE)
         elif usr_response == 'count':
             file_counts = ds.count_all_files(PrintFormat.CONSOLE)
         elif usr_response == 'count-max':
@@ -138,6 +147,8 @@ def main():
             else:
                 file_counts = ds.count_all_files(PrintFormat.NONE)
                 ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
+        elif usr_response == 'find-ip':
+            ds.find_ip(PrintFormat.CONSOLE)
         else:
             print("Operation not found. Type 'help' for a list of available operations.")
 
