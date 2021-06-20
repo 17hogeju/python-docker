@@ -119,22 +119,8 @@ class DockerScript:
             fd.close
 
 def main():
-    exit_status = False
     file_counts = {}
     ds = DockerScript()
-    # print('Welcome to PyDock!')
-    # print('This program allows you to execute file operations within the folder: home/data')
-    # print("To get a list of available operations, type 'help'")
-    # print("To exit this program, type 'exit'")
-    # while(exit_status == False):
-    #     usr_response = input('>> ')
-    #     if usr_response == 'exit':
-    #         exit_status = True
-    #     elif usr_response == 'help':
-    #         ds.print_help()
-    #     elif usr_response == 'list':
-    #         ds.print_list(PrintFormat.CONSOLE)
-    #     elif usr_response == 'run':
     ds.print_list(PrintFormat.FILE)
     file_counts = ds.count_all_files(PrintFormat.FILE)
     ds.get_max_file_count(PrintFormat.FILE, file_counts)
@@ -142,18 +128,6 @@ def main():
     read_file = open (OUTDIR + OUTNAME,"r")
     strings = read_file.read()
     print (strings)
-        # elif usr_response == 'count':
-        #     file_counts = ds.count_all_files(PrintFormat.CONSOLE)
-        # elif usr_response == 'count-max':
-        #     if file_counts:
-        #         ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
-        #     else:
-        #         file_counts = ds.count_all_files(PrintFormat.NONE)
-        #         ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
-        # elif usr_response == 'find-ip':
-        #     ds.find_ip(PrintFormat.CONSOLE)
-        # else:
-        #     print("Operation not found. Type 'help' for a list of available operations.")
 
 if __name__ == "__main__":
     main()
