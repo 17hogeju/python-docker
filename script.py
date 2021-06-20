@@ -139,6 +139,9 @@ def main():
             file_counts = ds.count_all_files(PrintFormat.FILE)
             ds.get_max_file_count(PrintFormat.FILE, file_counts)
             ds.find_ip(PrintFormat.FILE)
+            read_file = open (OUTDIR + OUTNAME,"r")
+            strings = read_file.read()
+            print (strings)
         elif usr_response == 'count':
             file_counts = ds.count_all_files(PrintFormat.CONSOLE)
         elif usr_response == 'count-max':
