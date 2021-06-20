@@ -75,7 +75,7 @@ class DockerScript:
                 fd.write("No files exist in the data directory\n")
         for file in files:
             try:
-                tmpfile = open(file, "rt")
+                tmpfile = open(DATADIR + file, "rt")
                 data = tmpfile.read()
                 words = data.split()
                 file_counts[file] = len(words)
@@ -103,7 +103,7 @@ class DockerScript:
                 fd.close
         else:
             if print_var == PrintFormat.CONSOLE:
-                print("No files exist in the dat directory")
+                print("No files exist in the data directory")
             else:
                 fd = open(OUTDIR + OUTNAME, "w")
                 fd.write("No files exist in the data directory\n")
