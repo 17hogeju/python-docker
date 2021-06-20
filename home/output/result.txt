@@ -1,0 +1,6 @@
+file1.txt 5 
+file2.txt 11 
+file3.txt 7 
+Total number of words 23 
+The biggest file is file2.txt with 11 words 
+The ip address is 192.168.0.122 
