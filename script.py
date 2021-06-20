@@ -67,7 +67,7 @@ class DockerScript:
         total = 0
 
         if print_var == PrintFormat.FILE:
-            fd = open(OUTDIR + OUTNAME, "w")
+            fd = open(OUTDIR + OUTNAME, "a")
         if len(files) == 0:
             if print_var == PrintFormat.CONSOLE:
                 print("No files exist in the data directory")
@@ -98,21 +98,20 @@ class DockerScript:
             if print_var == PrintFormat.CONSOLE:
                 print("Max file: %s - %s words" % (key, file_counts[key]))
             else:
-                fd = open(OUTDIR + OUTNAME, "w")
+                fd = open(OUTDIR + OUTNAME, "a")
                 fd.write("Max file: %s - %s words" % (key, file_counts[key]))
                 fd.close
         else:
             if print_var == PrintFormat.CONSOLE:
                 print("No files exist in the data directory")
             else:
-                fd = open(OUTDIR + OUTNAME, "w")
+                fd = open(OUTDIR + OUTNAME, "a")
                 fd.write("No files exist in the data directory\n")
                 fd.close
 
 
 def main():
     exit_status = False
-    usr_path = os.getcwd()
     file_counts = {}
     ds = DockerScript()
     print('Welcome to PyDock!')
@@ -139,7 +138,6 @@ def main():
             else:
                 file_counts = ds.count_all_files(PrintFormat.NONE)
                 ds.get_max_file_count(PrintFormat.CONSOLE, file_counts)
-
         else:
             print("Operation not found. Type 'help' for a list of available operations.")
 
